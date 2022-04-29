@@ -1,12 +1,14 @@
-import { Router } from "express";
-import { controller } from "../controllers/controller"
+import { Router } from 'express';
+
+import { Controller } from '../controllers/controller';
+
 export const createRouter = () => {
     const router = Router();
-    router.get("/", controller.getAll);
-    router.get("/:cryptocurrensyName", controller.get);
-    router.delete("/", controller.deleteAll);
-    router.delete("/:cryptocurrensyName", controller.delete);
-    router.post("/", controller.post);
-    router.put("/:cryptocurrensyName", controller.update);
+    router.get('/', Controller.getAll);
+    router.get('/:cryptocurrensyName', Controller.get);
+    router.delete('/', Controller.deleteAll);
+    router.delete('/:cryptocurrensyName', Controller.delete);
+    router.post('/', Controller.post);
+    router.put('/:cryptocurrensyName', Controller.update);
     return router;
-}
+};

@@ -1,82 +1,41 @@
-import { Request, Response } from "express";
-import { db } from "../db";
-import dotenv from "dotenv"
-dotenv.config();
+import { Request, Response } from 'express';
 
-export class controller {
+import { Coin } from '../db/entity/coin.entity';
+
+export class Controller {
     static async getAll(req: Request, res: Response) {
-        const { name, market } = req.query;
-        if (name && market) {
-            db.query(`SELECT cryptocurrensyName, ${market} FROM coins WHERE cryptocurrensyName = ?;`, [name], (err, rows) => {
-                if (err) {
-                    throw err;
-                }
-                res.send(rows);
-            });
-        }
-        else if (name) {
-            db.query("SELECT * FROM coins WHERE cryptocurrensyName = ?;", [name], (err, rows) => {
-                if (err) {
-                    throw err;
-                }
-                res.send(rows);
-            });
-        }
-        else if (market) {
-            db.query(`SELECT cryptocurrensyName, ${market} FROM coins;`, (err, rows) => {
-                if (err) {
-                    throw err;
-                }
-                res.send(rows);
-            });
-        }
-        else {
-            db.query("SELECT * FROM coins;", (err, rows) => {
-                if (err) {
-                    throw err;
-                }
-                res.send(rows);
-            });
-        }
+        const coins = await Coin.find();
+        return res.send(coins);
     }
+
     static async get(req: Request, res: Response) {
-        db.query("SELECT * FROM coins WHERE cryptocurrensyName = ?;", [req.params.cryptocurrensyName], (err, rows) => {
-            if (err) {
-                throw err;
-            }
-            res.send(rows);
-        });
+        const coin = await Coin.findOneBy({ cryptocurrensyName: req.params.cryptocurrensyName });
+        return res.send(coin);
     }
+
     static async deleteAll(req: Request, res: Response) {
-        db.query("DELETE FROM coins;", (err) => {
-            if (err) {
-                throw err;
-            }
-            res.send("OK");
-        });
+        Coin.clear();
+        return res.send('OK');
     }
+
     static async delete(req: Request, res: Response) {
-        db.query("DELETE FROM coins WHERE cryptocurrensyName = ?;", [req.params.cryptocurrensyName], (err) => {
-            if (err) {
-                throw err;
-            }
-            res.send("OK");
-        });
+        await Coin.delete(req.params.cryptocurrensyName);
+        return res.send('OK');
     }
+    
     static async post(req: Request, res: Response) {
-        db.query("INSERT INTO coins SET ?;", [req.body], (err) => {
-            if (err) {
-                throw err;
-            }
-            res.send("OK");
-        });
+        const coin = await Coin.create(req.body);
+        await coin.save();
+        res.send('OK');
     }
+
     static async update(req: Request, res: Response) {
-        db.query("UPDATE coins SET ? WHERE cryptocurrensyName = ?;", [req.body, req.params.cryptocurrensyName], (err) => {
-            if (err) {
-                throw err;
-            }
-            res.send("OK");
-        });
+        const coin = await Coin.findOneBy({ cryptocurrensyName: req.params.cryptocurrensyName });
+        if (coin) {
+            Coin.merge(coin, req.body);
+            await coin.save();
+            return res.send('OK');
+        }
+        return res.send('Coin not found');
     }
 }
