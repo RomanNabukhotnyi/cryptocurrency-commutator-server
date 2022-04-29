@@ -35,11 +35,11 @@ export const doRequests = async () => {
             Object.keys(dataCoinPaprika).includes(coin)) {
             await axios.post(`http://localhost:${process.env.PORT}/coins`, {
                 cryptocurrensyName: coin,
-                coinMarketCapValue: +(dataCoinMarketCap[coin]).toFixed(6),
-                coinBaseValue: +(1 / dataCoinBase[coin]).toFixed(6),
-                coinStatsValue: +(dataCoinStats[coin]).toFixed(6),
-                kucoinValue: +(Number(dataKucoin[coin])).toFixed(6),
-                coinPaprikaValue: +(dataCoinPaprika[coin]).toFixed(6),
+                coinMarketCapValue: dataCoinMarketCap[coin],
+                coinBaseValue: 1 / dataCoinBase[coin],
+                coinStatsValue: dataCoinStats[coin],
+                kucoinValue: Number(dataKucoin[coin]),
+                coinPaprikaValue: dataCoinPaprika[coin],
             });
         }
     });

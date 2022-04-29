@@ -5,18 +5,28 @@ export class Coin extends BaseEntity {
     @PrimaryColumn()
         cryptocurrensyName!: string;
 
-    @Column()
+    @Column({
+        type: 'double',
+    })
         coinMarketCapValue!: number;
     
-    @Column()
+    @Column({
+        type: 'double',
+    })
         coinBaseValue!: number;
 
-    @Column()
+    @Column({
+        type: 'double',
+    })
         coinStatsValue!: number;
 
-    @Column()
+    @Column({
+        type: 'double',
+    })
         kucoinValue!: number;
 
-    @Column()
+    @Column({
+        type: 'double',
+    })
         coinPaprikaValue!: number;
 }

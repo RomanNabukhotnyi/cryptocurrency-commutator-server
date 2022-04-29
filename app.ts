@@ -15,7 +15,7 @@ app.use('/coins', router);
 
 app.listen(PORT, async () => {
     console.log(`The server has started(http://localhost:${PORT}/)...`);
-    myDataSource
+    await myDataSource
         .initialize()
         .then(() => {
             console.log('Data Source has been initialized!');
