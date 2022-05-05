@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 
-import { Coin } from './entity/coin.entity';
+import { Coin } from './entity/Coin';
 
 export const myDataSource = new DataSource({
     type: 'mysql',
