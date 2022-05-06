@@ -1,42 +1,29 @@
 import { Request, Response } from 'express';
 
-import { Coin } from '../db/entity/Coin';
 import { CoinRepository } from '../db/repository/CoinRepository';
 
 export class Controller {
     static async getAll(req: Request, res: Response) {
-        const coins = await CoinRepository.find();
-        return res.send(coins);
+        return res.send(await CoinRepository.getAllCoin());
     }
 
     static async get(req: Request, res: Response) {
-        const coin = await CoinRepository.findOneBy({ cryptocurrensyName: req.params.cryptocurrensyName });
-        return res.send(coin);
+        return res.send(await CoinRepository.getCoin(req.params.cryptocurrensyName));
     }
 
     static async deleteAll(req: Request, res: Response) {
-        CoinRepository.clear();
-        return res.send('OK');
+        return res.send(await CoinRepository.deleteAllCoin());
     }
 
     static async delete(req: Request, res: Response) {
-        await CoinRepository.delete(req.params.cryptocurrensyName);
-        return res.send('OK');
+        return res.send(await CoinRepository.deleteCoin(req.params.cryptocurrensyName));
     }
     
     static async post(req: Request, res: Response) {
-        const coin = await Coin.create(req.body);
-        await CoinRepository.save(coin);
-        res.send('OK');
+        return res.send(await CoinRepository.createCoin(req.body));
     }
 
     static async update(req: Request, res: Response) {
-        const coin = await CoinRepository.findOneBy({ cryptocurrensyName: req.params.cryptocurrensyName });
-        if (coin) {
-            CoinRepository.merge(coin, req.body);
-            await CoinRepository.save(coin);
-            return res.send('OK');
-        }
-        return res.send('Coin not found');
+        return res.send(await CoinRepository.updateCoin(req.params.cryptocurrensyName, req.body));
     }
 }
