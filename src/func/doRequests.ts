@@ -7,27 +7,27 @@ import { IResKucoin } from '../interfaces/IResKucoin';
 import { IResCoinPaprika } from '../interfaces/IResCoinPaprika';
 
 export const doRequests = async () => {
-    const dataCoinMarketCap = await axios.get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest', {
+    const dataCoinMarketCap = await axios.get<IResCoinMarketCap>('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest', {
         headers: {
             'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_API_KEY!,
         },
-    }).then((res: IResCoinMarketCap) => {
+    }).then(res => {
         const result: { [coin: string]: number; } = {};
         res.data.data.forEach((obj) => {
             result[obj.symbol] = obj.quote.USD.price;
         });
         return result;
     });
-    const dataCoinBase = await axios.get('https://api.coinbase.com/v2/exchange-rates').then((res: IResCoinBase) => res.data.data.rates);
-    const dataCoinStats = await axios.get('https://api.coinstats.app/public/v1/coins').then((res: IResCoinStats) => {
+    const dataCoinBase = await axios.get<IResCoinBase>('https://api.coinbase.com/v2/exchange-rates').then(res => res.data.data.rates);
+    const dataCoinStats = await axios.get<IResCoinStats>('https://api.coinstats.app/public/v1/coins').then(res => {
         const result: { [coin: string]: number; } = {};
         res.data.coins.forEach((obj) => {
             result[obj.symbol] = obj.price;
         });
         return result;
     });
-    const dataKucoin = await axios.get('https://api.kucoin.com/api/v1/prices').then((res: IResKucoin) => res.data.data);
-    const dataCoinPaprika = await axios.get('https://api.coinpaprika.com/v1/tickers').then((res: IResCoinPaprika) => {
+    const dataKucoin = await axios.get<IResKucoin>('https://api.kucoin.com/api/v1/prices').then(res => res.data.data);
+    const dataCoinPaprika = await axios.get<IResCoinPaprika[]>('https://api.coinpaprika.com/v1/tickers').then(res => {
         const result: { [coin: string]: number; } = {};
         res.data.forEach((obj) => {
             if (!Object.keys(res).includes(obj.symbol)) {

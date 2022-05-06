@@ -1,7 +1,5 @@
 export interface IResKucoin {
     data: {
-        data: {
-            [coin: string]: string;
-        };
+        [coin: string]: string;
     };
 }
